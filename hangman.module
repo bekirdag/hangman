@@ -36,7 +36,7 @@ function hangman_menu() {
 function hangman_block_info() {
   $blocks['hangman'] = array(
     'info' => t('Hangman'),
-    'cache' => DRUPAL_CACHE_GLOBAL,
+    'cache' => DRUPAL_NO_CACHE,
   );
   return $blocks;
 }
