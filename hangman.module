@@ -1,0 +1,144 @@
+<?php
+
+/**
+ * @file
+ * Hangman game module.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function hangman_menu() {
+  $items['hangman'] = array(
+    'title' => 'Hangman!',
+    'page callback' => 'hangman_page',
+    'description' => 'Simple hangman game for adults',
+    'access callback' => TRUE,
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['hangman/score/%/%'] = array(
+    'title' => '',
+    'page callback' => 'hangman_score_save',
+    'page arguments' => array(2, 3),
+    'access callback' => TRUE,
+  );
+  $items['hangman/scoreboard'] = array(
+    'title' => '',
+    'page callback' => 'hangman_get_scoreboard',
+    'access callback' => TRUE,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function hangman_block_info() {
+  $blocks['hangman'] = array(
+    'info' => t('Hangman'),
+    'cache' => DRUPAL_CACHE_GLOBAL,
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function hangman_block_view($delta = '') {
+  $block = array();
+
+  switch ($delta) {
+    case 'hangman':
+      hangman_user_info();
+      drupal_add_css(drupal_get_path('module', 'hangman') . '/css/style.css');
+      drupal_add_js(drupal_get_path('module', 'hangman') . '/js/hangman.js');
+      drupal_add_js(drupal_get_path('module', 'hangman') . '/js/start.js');
+      $block['title'] = 'Hangman';
+      $block['content'] = theme('hangman_content', array(
+        'data' => array(),
+      ));
+
+      break;
+  }
+
+  return $block;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function hangman_theme($existing, $type, $theme, $path) {
+  $items = array();
+  if ($type == 'module') {
+    $items['hangman_content'] = array(
+      'variables' => array('data' => array()),
+      'template' => 'theme/hangman',
+    );
+  }
+  return $items;
+}
+
+/**
+ * Hangman default page.
+ */
+function hangman_page() {
+  hangman_user_info();
+  drupal_add_js(drupal_get_path('module', 'hangman') . '/js/hangman.js');
+  drupal_add_js(drupal_get_path('module', 'hangman') . '/js/start.js');
+  drupal_add_css(drupal_get_path('module', 'hangman') . '/css/hangman.css');
+  $content = theme('hangman_content', array(
+    'data' => array(),
+  ));
+  $hangman_scores_table = hangman_scores_table();
+  $content .= "<div id='hangman_scoreboard'>" . $hangman_scores_table . "</div>";
+  return $content;
+}
+
+/**
+ * Parse user name.
+ */
+function hangman_user_info() {
+  global $user;
+  $username = ($user->uid > 0) ? $user->name : "Anonymous";
+
+  $my_settings = array(
+    'username' => $username,
+  );
+  drupal_add_js(array('hangman' => $my_settings), 'setting');
+}
+
+/**
+ * Save the user score with an ajax request.
+ */
+function hangman_score_save($score, $name) {
+  return db_insert('hangman_scores')
+    ->fields(array(
+      'name' => $name,
+      'score' => $score,
+    ))
+    ->execute();
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function hangman_views_api() {
+  return array(
+    'api' => 3,
+  );
+}
+
+/**
+ * Programmatically get the score views block.
+ */
+function hangman_scores_table() {
+  return views_embed_view('hangman_scores', 'block');
+}
+
+/**
+ * Return scoreboard as json data.
+ */
+function hangman_get_scoreboard() {
+  $board = hangman_scores_table();
+  print $board;
+}

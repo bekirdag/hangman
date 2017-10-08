@@ -1,0 +1,6 @@
+name = "Hangman"
+description = "A simple hangman game for 3Dhubs.com"
+package = "3Dhubs"
+core = "7.x"
+dependencies[] = "views"
+files[] = includes/views_handler_hangman_score.inc

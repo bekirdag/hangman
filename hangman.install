@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @file
+ * Install the hangman scores table.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function hangman_schema() {
+  $schema['hangman_scores'] = array(
+    'description' => 'Hangman user score data',
+    'fields' => array(
+      'id' => array(
+        'description' => 'Primary key with type; a unique id for the item.',
+        'type' => 'serial',
+        'not null' => TRUE,
+      ),
+      'name' => array(
+        'description' => 'Game user name',
+        'type' => 'varchar',
+        'length' => '128',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'score' => array(
+        'description' => 'Game score',
+        'type' => 'int',
+        'size' => 'small',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+
+  return $schema;
+}

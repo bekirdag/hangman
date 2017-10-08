@@ -1,0 +1,68 @@
+#hangman_main_wrapper {
+  font-family: helvetica;
+}
+
+#hangman_alphabet ul li {
+  list-style: none;
+  float: left;
+  cursor: pointer;
+  color: blue;
+  padding: 5px;
+  margin: 5px;
+  border: 1px solid #efefef;
+}
+
+#hangman_alphabet ul {
+  padding: 0px;
+  margin: 0px;
+}
+
+#hangman_alphabet,
+#hangman_letters_wrapper {
+  width: 650px;
+  float: left;
+  position: relative;
+}
+
+.hangman_letter {
+  border-bottom: 2px solid #000;
+  width: 60px;
+  height: 60px;
+  font-size: 36px;
+  float: left;
+  margin: 10px;
+  text-align: center;
+}
+
+.used {
+  color: #ccc !important;
+  cursor: auto !important;
+}
+
+#new_game {
+  cursor: pointer;
+  color: white;
+  border: 1px solid #ccc;
+  width: 100px;
+  padding: 10px;
+  background-color: green;
+  text-align: center;
+}
+
+#status {
+  width: 255px;
+  height: 355px;
+  background-image: url("img/background.png");
+}
+
+.red {
+  color: red;
+}
+
+.green {
+  color: green;
+}
+
+#hangman_info_wrapper {
+  float: left;
+}
